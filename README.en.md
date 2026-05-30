@@ -1,36 +1,110 @@
-# english
+# English Word Learning System
 
-#### Description
-单词打卡系统
+English is a Spring Boot web application for vocabulary learning, daily check-ins, word review, and personal learning progress tracking.
 
-#### Software Architecture
-Software architecture description
+## Features
 
-#### Installation
+- User login and session management with Apache Shiro
+- Vocabulary learning flow with next-word recommendations
+- Daily word review by date
+- Marked-word review for important or difficult words
+- Personal learning statistics and study records
+- Email notification support
+- Server-rendered pages with Thymeleaf
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## Tech Stack
 
-#### Instructions
+- Java 8
+- Spring Boot 2.7.10
+- Thymeleaf
+- Apache Shiro
+- MyBatis-Plus
+- PageHelper
+- MySQL
+- Druid connection pool
+- Maven
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## Project Structure
 
-#### Contribution
+```text
+english/
++-- src/main/java/com/ljb/english
+|   +-- config/        Application, Shiro, and MyBatis configuration
+|   +-- controller/    Page routes and REST APIs
+|   +-- mapper/        MyBatis mapper interfaces
+|   +-- pojo/          Entity classes
+|   +-- service/       Business services
+|   +-- utils/         Shared utility classes
++-- src/main/resources
+|   +-- mapper/        MyBatis XML mappings
+|   +-- static/        Static assets
+|   +-- templates/     Thymeleaf pages
+|   +-- application.yaml
++-- pom.xml
+```
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+## Configuration
 
+The application reads sensitive values from environment variables. Configure these before running the project:
 
-#### Gitee Feature
+| Variable | Description | Default |
+| --- | --- | --- |
+| `DB_USERNAME` | MySQL username | `root` |
+| `DB_PASSWORD` | MySQL password | empty |
+| `DB_URL` | JDBC connection URL | `jdbc:mysql://localhost:3306/english?...` |
+| `MAIL_USERNAME` | SMTP account username | empty |
+| `MAIL_PASSWORD` | SMTP account password or authorization code | empty |
 
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+PowerShell example:
+
+```powershell
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="your_mysql_password"
+$env:MAIL_USERNAME="your_email@example.com"
+$env:MAIL_PASSWORD="your_email_auth_code"
+```
+
+## Run Locally
+
+1. Create a MySQL database named `english`.
+2. Configure the required environment variables.
+3. Start the application:
+
+```powershell
+.\mvnw spring-boot:run
+```
+
+4. Open the application in your browser:
+
+```text
+http://localhost:8089/index
+```
+
+## Main Pages
+
+- `/index`: Home page
+- `/toLogin`: Login page
+- `/toStart`: Start vocabulary learning
+- `/toReview/today`: Review today's learned words
+- `/toReview/sign`: Review marked words
+- `/english/self`: Personal learning profile
+
+## API Overview
+
+Most vocabulary APIs are under `/english`.
+
+- `POST /english/login`
+- `GET /english/getNextInfo`
+- `GET /english/reviewStudiedWordsByDate`
+- `GET /english/updateSign/{wid}/{choice}`
+- `GET /english/queryWord`
+- `GET /english/signWordReview/{choice}`
+- `POST /english/self/update`
+- `GET /english/sendEmail`
+- `GET /english/queryAllCordData`
+
+## Notes
+
+- Runtime secrets are intentionally not committed to the repository.
+- The database schema and seed data must be prepared separately before the application can be used fully.
+- The application uses server-rendered templates, so no separate frontend build step is required.
