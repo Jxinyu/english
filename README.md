@@ -1,37 +1,96 @@
-# english
+# English Word Learning System
 
-#### 介绍
-单词打卡系统
+English is a Spring Boot web application for vocabulary learning, daily check-ins, word review, and personal learning progress tracking.
 
-#### 软件架构
-软件架构说明
+## Features
 
+- User login and session management with Apache Shiro
+- Vocabulary learning flow with next-word recommendations
+- Daily word review by date
+- Marked-word review for important or difficult words
+- Personal learning statistics and study records
+- Email notification support
+- Server-rendered pages with Thymeleaf
 
-#### 安装教程
+## Tech Stack
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- Java 8
+- Spring Boot 2.7.10
+- Thymeleaf
+- Apache Shiro
+- MyBatis-Plus
+- PageHelper
+- MySQL
+- Druid connection pool
+- Maven
 
-#### 使用说明
+## Project Structure
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+```text
+english/
++-- src/main/java/com/ljb/english
+|   +-- config/
+|   +-- controller/
+|   +-- mapper/
+|   +-- pojo/
+|   +-- service/
+|   +-- utils/
++-- src/main/resources
+|   +-- mapper/
+|   +-- static/
+|   +-- templates/
+|   +-- application.yaml
++-- pom.xml
+```
 
-#### 参与贡献
+## Configuration
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
+Sensitive values are read from environment variables.
 
+| Variable | Description | Default |
+| --- | --- | --- |
+| `DB_USERNAME` | MySQL username | `root` |
+| `DB_PASSWORD` | MySQL password | empty |
+| `DB_URL` | JDBC connection URL | local `english` database |
+| `MAIL_USERNAME` | SMTP username | empty |
+| `MAIL_PASSWORD` | SMTP password or authorization code | empty |
 
-#### 特技
+PowerShell example:
 
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```powershell
+$env:DB_USERNAME="root"
+$env:DB_PASSWORD="your_mysql_password"
+$env:MAIL_USERNAME="your_email@example.com"
+$env:MAIL_PASSWORD="your_email_auth_code"
+```
+
+## Run Locally
+
+1. Create a MySQL database named `english`.
+2. Configure the required environment variables.
+3. Start the application:
+
+```powershell
+.\mvnw spring-boot:run
+```
+
+4. Open:
+
+```text
+http://localhost:8089/index
+```
+
+## Main Pages
+
+- `/index`: Home page
+- `/toLogin`: Login page
+- `/toStart`: Start vocabulary learning
+- `/toReview/today`: Review today's learned words
+- `/toReview/sign`: Review marked words
+- `/english/self`: Personal learning profile
+
+## Notes
+
+- Runtime secrets are intentionally not committed to the repository.
+- The database schema and seed data must be prepared separately.
+- This is a server-rendered application, so no separate frontend build step is required.
