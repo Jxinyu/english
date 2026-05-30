@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="/static/assets/img/favicon.ico">
+    <title>english-星球-每日打卡</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="/static/assets/css/all.css">
+
+    <!-- Main CSS -->
+    <link href="/static/assets/css/main.css" rel="stylesheet"/>
+
+    <!-- Animation CSS -->
+    <link href="/static/assets/css/vendor/aos.css" rel="stylesheet"/>
+
+    <!--ayui-->
+    <link href="/static/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/static/layui/css/modules/laydate/default/laydate.css" rel="stylesheet"/>
+    <link href="/static/layui/css/modules/layer/default/layer.css" rel="stylesheet"/>
+    <link href="/static/index.css" rel="stylesheet"/>
+    <style>
+        button:focus {
+            outline: none;
+        }
+
+        /** {*/
+        /*    touch-action: pan-y;*/
+        /*}*/
+
+        #canvas {
+            border: 1px solid #000;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body id="body">
+
+<!----------------------------------------------------------------------
+NAVBAR（如果您不想在滚动时更改导航背景，请删除 topnav）
+------------------------------------------------------------------------>
+<nav class="topnav navbar navbar-expand-lg navbar-dark bg-black fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/index">
+            <i class="layui-icon-export layui-icon"></i>
+            <strong>english-星球</strong>
+        </a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarColor02" style="">
+            <ul class="navbar-nav mr-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/toStart">每日打卡</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/toReview/today">每日复习</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/toReview/sign">回顾标记</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/toReview/all">回顾所有</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <span class="nav-link layui-form" onclick="changeTheme(this)">
+                          <input type="checkbox" lay-skin="switch" lay-filter="switchTest" title="白|夜">
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-primary btn-round shadow-sm" href="/index"
+                        ><i
+                                class="layui-icon-username layui-icon"></i>&nbsp;&nbsp;前台
+                        </a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+<main class="container" style="margin-top: 60px">
+    <!--------------------------------------
+    CAROUSEL 主体
+    --------------------------------------->
+    <section class="pt-4 pb-5" data-aos="fade-up" id="example-carousel">
+        <h3 class="h5 mb-4 font-weight-bold">每日打卡</h3>
+        <small><span style="color: red">*</span>快速记忆</small>
+        <div style="text-align: center">
+            <span class="layui-breadcrumb" lay-separator="|" style="pointer-events: none;">
+              <a href="">今日已学：<span class="today_studied_words_nums"></span></a>
+              <a href="">今日未学：<span class="today_not_studied_word_nums"></span></a>
+              <a href="">当前单元：<span class="wUnit"></span></a>
+              <a href="">已学类型单词数量：<span class="completed_type_all_nums"></span></a>
+              <a href="">类型单词总数：<span class="type_words_all_nums"></span></a>
+              <a href="">已选单词类型：<span class="wMold"></span></a>
+            </span>
+            <div style="background-color: #8e8888">
+                <table class="layui-table tab" lay-skin="nob" style="cursor: pointer;touch-action: pan-y pinch-zoom;
+                        display: inline-block;padding: 3px 6px;text-align: right;width: 100%;vertical-align: top;">
+                    <tbody style="min-height: 250px;">
+                    <tr>
+                        <td style="font-size: 16px;width: 144px;">英文：</td>
+                        <td style="color: #ff0000;font-size: 16px;text-align: left;">
+                            <p class="wEn"></p>
+                            <p class="wPhonetic" style="font-size: 12px"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;width: 144px;">中文：</td>
+                        <td style="color: #18a84a;font-size: 14px;text-align: left;" class="wZh">*********</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;width: 144px;">记忆技巧：</td>
+                        <td style="color: #0022ff;font-size: 12px;text-align: left;" class="wMemoSkill"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;width: 144px;">短语：</td>
+                        <td style="color: #336d0f;font-size: 14px;text-align: left;" class="phrase"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="layui-breadcrumb" lay-separator="|" style="float: right; margin-top: 5px">
+                <button class="layui-btn layui-btn-normal layui-btn-radius wZhClick">查看中文</button>
+                <button class="layui-btn layui-btn-warm layui-btn-radius wAudio" name="">查看读音</button>
+                <button class="layui-btn layui-btn-danger layui-btn-radius wRankClick">标记等级<span
+                        class="wRank">0</span></button>
+                <button class="layui-btn layui-btn-normal layui-btn-radius nextWord" style="display: none;"
+                        onclick="queryNextWords()">下一个</button>
+            </span>
+        </div>
+
+        <a href="/toReview/today" class="layui-btn-danger layui-btn layui-btn-radius"
+           style="margin-top: 50px; float: left">开始复习</a>
+
+        <!-- 画布-->
+        <div>
+            <button id="clearButton" class="layui-btn layui-btn-radius" style="margin-top: 50px; float: left">清除画布
+            </button>
+            <canvas id="canvas" width="auto" height="250"
+                    style="background-color: #c9c9c9;"></canvas>
+
+
+            <script>
+                // 获取画布和上下文
+                var canvas = document.getElementById('canvas');
+                var parent = document.getElementById('example-carousel');
+                var ctx = canvas.getContext('2d');
+                var drawing = false;
+
+                // 设置画布宽度
+                canvas.width = parent.clientWidth;
+
+                // 阻止默认滚动行为
+                canvas.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                });
+
+                canvas.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                });
+
+                // 鼠标或触摸事件
+                canvas.addEventListener('mousedown', startDrawing);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDrawing);
+                canvas.addEventListener('touchstart', startDrawing);
+                canvas.addEventListener('touchmove', draw);
+                canvas.addEventListener('touchend', stopDrawing);
+
+                // 清除按钮事件
+                var clearButton = document.getElementById('clearButton');
+                clearButton.addEventListener('click', clearCanvas);
+
+                // 开始绘制
+                function startDrawing(e) {
+                    drawing = true;
+                    ctx.beginPath();
+                    ctx.moveTo(getX(e), getY(e));
+                }
+
+                // 绘制
+                function draw(e) {
+                    if (!drawing) return;
+                    ctx.lineTo(getX(e), getY(e));
+                    ctx.stroke();
+                }
+
+                // 停止绘制
+                function stopDrawing() {
+                    drawing = false;
+                    ctx.closePath();
+                }
+
+                // 获取鼠标或触摸位置
+                function getX(e) {
+                    if (e.touches) {
+                        return e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                    } else {
+                        return e.clientX - canvas.getBoundingClientRect().left;
+                    }
+                }
+
+                function getY(e) {
+                    if (e.touches) {
+                        return e.touches[0].clientY - canvas.getBoundingClientRect().top;
+                    } else {
+                        return e.clientY - canvas.getBoundingClientRect().top;
+                    }
+                }
+
+                // 清除画布
+                function clearCanvas() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            </script>
+        </div>
+    </section>
+
+    <section>
+        <div style="position:fixed; bottom:20px;right:20px;" onclick="searchWordByPop()">
+            <div>
+                <img class="rounded-circle shadow-lg" src="/static/assets/img/view.jpg"
+                     width="70" data-toggle="tooltip" data-placement="top" title="">
+            </div>
+        </div>
+    </section>
+
+    <!--------------------------------------
+    END
+    --------------------------------------->
+
+</main>
+
+<!--------------------------------------
+JAVASCRIPTS
+--------------------------------------->
+<script src="/static/assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/share.js" type="text/javascript"></script>
+<script src="/static/assets/js/functions.js" type="text/javascript"></script>
+<script src="/static/layui/layui.js" type="text/javascript"></script>
+<script src="/static/index.js" type="text/javascript"></script>
+
+<!-- Animation -->
+<script src="/static/assets/js/vendor/aos.js" type="text/javascript"></script>
+<noscript>
+    <style>
+        *[data-aos] {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
+</noscript>
+<script>
+
+
+    tips()
+
+    function tips() {
+        layer.msg('移动端左右滑动开始打卡', {offset: '86px', anim: 6})
+    }
+
+    function queryNextWords() {
+        $.ajax({
+            url: '/english/getNextInfo',
+            method: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    if (res.completed === true) {  // 稍后
+                        layer.msg('该部分单词已经完成。。。')
+                        return
+                    }
+                    s = ''
+                    // console.log(res)
+                    if (res.phrase.length !== 0) {
+                        for (let i = 0; i < res.phrase.length; i++) {
+                            s +=
+                                '<p>' + res.phrase[i].pen + '' +
+                                '<span>：</span>' +
+                                '<span>' + res.phrase[i].pzh + '</span>' +
+                                '</p>'
+                        }
+                    }
+                    // console.log(res)
+                    $('.phrase').empty().append(s)
+
+                    $('.wEn').empty().text(res.word_info.wen)  // 英文
+                    $('.wRankClick').attr('sign', res.word_info.id)
+                    $('.wZh').empty().text('*********') // 中文
+                    $('.wZhClick').attr('sign', res.word_info.wzh)
+
+                    $('.wAudio').attr('name', res.word_info.waudio) // 音频
+                    $('.wPhonetic').empty().text(res.word_info.wphonetic) // 音标
+                    $('.wMemoSkill').empty().text(res.word_info.wmemoSkill) // 记忆技巧
+                    $('.wMold').empty().text(res.word_info.wmold) // 单词类型
+                    // 今天没有完成的单词数量
+                    $('.today_not_studied_word_nums').empty().text(res.word_info.eachDayWordNumber - res.word_info.todayStudiedWordsNumber)
+                    // 当前类型已经完成的数量
+                    $('.completed_type_all_nums').empty().text(res.word_info.learnedTypeWordNumber)
+                    //今天已经学习的单词数量
+                    $('.today_studied_words_nums').empty().text(res.word_info.todayStudiedWordsNumber)
+                    // 当前类型，所有的单词数量
+                    $('.type_words_all_nums').empty().text(res.word_info.typeTotalNumber)
+                    //单词所在的单元
+                    $('.wUnit').empty().text(res.word_info.wunit)
+                    //
+                    $('.wRank').text(0)
+                    $('.tab').height($('tbody').height())
+                } else {
+                    layer.msg(res.msg);
+                }
+
+            }
+        })
+    }
+
+    $('.wZhClick').click(function () {
+        $('.wZh').text($(this).attr('sign'))
+    })
+
+    // 播放音频
+    $(document).on('click', '.wAudio, .wAudioq', function (obj) {
+        var audio = obj.target.name
+        var mp3Url = "/audio/" + audio + '.mp3';
+        var player = new Audio(mp3Url);
+        player.play(); //播放 mp3这个音频对象
+    });
+
+    $('.wRankClick').click(function () {
+        $.ajax({
+            url: '/english/updateSign/' + $(this).attr('sign') + '/true',
+            method: 'get',
+            success: function (res) {
+                if (res.code === 200) {
+                    $('.wRank').text(res.msg)
+                } else {
+                    layer.msg(res.msg)
+                }
+            }
+        })
+    })
+
+
+    //在绑定的元素上加：css：touch-action: pan-y pinch-zoom
+    var winHeight = $('.tab').height();
+    $tab = $(".tab");
+    $tab.css("height", winHeight);
+    $tab.on("touchstart", function (e) {
+        e.preventDefault();
+        startX = e.originalEvent.changedTouches[0].pageX;
+        startY = e.originalEvent.changedTouches[0].pageY;
+    });
+    $tab.on("touchend", function (e) {
+        e.preventDefault();
+        EndX = e.originalEvent.changedTouches[0].pageX
+        EndY = e.originalEvent.changedTouches[0].pageY
+        X = EndX - startX;
+        Y = EndY - startY;
+        if (Math.abs(X) > Math.abs(Y) && X > 0) {
+            debounce(queryNextWords, 1000);
+            //queryNextWords();
+        } else if (Math.abs(X) > Math.abs(Y) && X < 0) {
+            //queryNextWords();
+            debounce(queryNextWords, 1000);
+        }
+    });
+
+    if (window.innerWidth > 700) {
+        $('.nextWord').css('display', 'inline')
+    } else {
+        $('.nextWord').css('display', 'none')
+    }
+
+
+    AOS.init({
+        duration: 700
+    });
+
+    <!-- 禁用小于 1200px 的动画，如果你喜欢可以更改值 -->
+
+    AOS.init({
+        disable: function () {
+            var maxWidth = 1200;
+            return window.innerWidth < maxWidth;
+        }
+    });
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
+</body>
+</html>

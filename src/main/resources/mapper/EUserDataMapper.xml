@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljb.english.mapper.EUserDataMapper">
+    <update id="updateWordsNums" parameterType="int">
+        update e_user_data e
+        set e.now_day_num =
+                    (select now_day_num
+                     from (select e_user_data.now_day_num from e_user_data where e_user_data.u_id = #{uId}) AS a) + 1,
+            e.all_num     =
+                    (select all_num
+                     from (select e_user_data.all_num from e_user_data where e_user_data.u_id = #{uId}) AS a) + 1
+        <if test="now_day_complete != false">
+            , e.now_day_complete = 1
+        </if>
+        where e.u_id = #{uId}
+    </update>
+
+    <update id="updateNumberAndStatus" parameterType="int">
+        update e_user_data e
+        set e.now_day_num = e.now_day_num + 1,
+            e.all_num = e.all_num + 1
+        <if test="now_day_complete != false">
+            , e.now_day_complete = 1
+        </if>
+        where e.u_id = #{uId}
+    </update>
+</mapper>

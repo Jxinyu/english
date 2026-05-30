@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljb.english.mapper.EStudiedMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ljb.english.pojo.EStudied">
+        <id column="s_id" property="sId"/>
+        <result column="u_id" property="uId"/>
+        <result column="w_id" property="wId"/>
+        <result column="s_mold" property="sMold"/>
+        <result column="s_memo_date" property="sMemoDate"/>
+    </resultMap>
+
+
+    <select id="getCompletedTypeAllNums" resultType="int">
+        select count(es.s_id)
+        from e_studied es
+        where  es.s_mold = #{wMold} and es.u_id = #{uId};
+    </select>
+
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljb.english.mapper.EPhraseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ljb.english.pojo.EPhrase">
+        <id column="p_id" property="pId" />
+        <result column="p_word" property="pWord" />
+        <result column="p_en" property="pEn" />
+        <result column="p_zh" property="pZh" />
+    </resultMap>
+
+    <select id="selectByPWord" resultType="ePhrase">
+        select p_id, p_word, p_en, p_zh from e_phrase where p_word=#{pWord}
+    </select>
+
+
+</mapper>

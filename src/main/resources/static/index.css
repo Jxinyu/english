@@ -1,0 +1,58 @@
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --background-color: #f8f9fa;
+}
+
+body {
+    background-color: var(--background-color);
+    user-select: none;
+}
+
+h1, h2, h3 {
+    color: var(--primary-color);
+}
+
+button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+}
+button:focus {
+     outline: none;
+}
+.layui-laypage-btn{
+    color: #0c0c0c;
+}
+
+.container_self{
+    height: 20vh;
+    background-color: #000000;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    filter: contrast(30);
+}
+.container_self_h1{
+    animation: showup 3s forwards;
+}
+@keyframes showup {
+    from {
+        letter-spacing: -20px;
+        filter: blur(10px);
+    }
+    to{
+        letter-spacing: 20px;
+        filter: blur(2px);
+    }
+}
+.layui-table-cell {
+    height:auto;
+    overflow:visible;
+    text-overflow:inherit;
+    white-space:normal;
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljb.english.mapper.EAllRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ljb.english.pojo.EAllRecord">
+        <id column="c_id" property="cId" />
+        <result column="u_id" property="uId" />
+        <result column="c_date" property="cDate" />
+        <result column="c_word_num" property="cWordNum" />
+    </resultMap>
+
+</mapper>

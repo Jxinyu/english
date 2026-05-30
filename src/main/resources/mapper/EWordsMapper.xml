@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljb.english.mapper.EWordsMapper">
+
+    <select id="getNext" resultType="eWords">
+        select e.id, e.w_en, e.w_zh, e.w_phonetic, e.w_audio, e.w_memo_skill, e.w_unit, e.w_mold
+        from e_words e
+        where e.id not in (select es.w_id from e_studied es where es.u_id = #{uId})
+        and e.w_mold = #{wMold}
+        <if test="wUnit != null">
+            and e.w_unit = #{wUnit}
+        </if>
+        order by e.w_unit limit 1
+    </select>
+
+    <select id="getNextUp" resultType="eWords">
+        SELECT e.id,
+               e.w_en,
+               e.w_zh,
+               e.w_phonetic,
+               e.w_audio,
+               e.w_memo_skill,
+               e.w_unit,
+               e.w_mold,
+               (select count(ew.id) from e_words ew where ew.w_mold = #{wMold}) as type_total_number,
+               eud.today_studied_words_number,
+               eud.each_day_word_number,
+               learned.learned_type_word_number
+        FROM e_words e
+                 JOIN (
+                    SELECT eud.u_id,
+                           eud.now_day_num + 1 AS today_studied_words_number,
+                           eud.each_day_num    AS each_day_word_number
+                    FROM e_user_data eud
+                    WHERE eud.u_id = #{uId}
+                ) eud ON eud.u_id = #{uId}
+                 JOIN (
+                    SELECT es.u_id,
+                           es.s_mold,
+                           COUNT(0) AS learned_type_word_number
+                    FROM e_studied es
+                    WHERE es.u_id = #{uId}
+                    GROUP BY es.u_id, es.s_mold
+                ) learned ON learned.u_id = #{uId} AND learned.s_mold = #{wMold}
+                 LEFT JOIN e_studied es ON es.u_id = #{uId} AND es.w_id = e.id
+        WHERE es.w_id IS NULL
+          AND e.w_mold = #{wMold}
+        ORDER BY e.w_unit
+        LIMIT 1
+    </select>
+
+    <select id="nowDayStudiedWordReview" resultType="eWords">
+        select *
+        from e_words w
+        where w.id in
+              (select s.w_id from e_studied s where s.u_id = #{uId} and s.s_memo_date = #{date})
+        order by w.id
+    </select>
+
+    <select id="signWordReview" resultType="eWords">
+        select w.* from e_words w, e_sign s where w.id = s.w_id and s.u_id = #{uId}
+        <if test="choice == false">
+            and s.l_is_memo=1
+        </if>
+        order by s.l_id DESC
+    </select>
+
+    <select id="allReviewSignRapid" resultType="eWords">
+        select * from e_words as ew join e_sign as es
+            on ew.id = es.w_id where es.u_id=#{uId}
+            order by es.l_id
+    </select>
+
+    <select id="selectAllByWUnit" resultType="int">
+        select count(total)
+        from (select count(w_unit) as total from e_words where w_mold = #{w_mold} group by w_unit) as ewc
+    </select>
+</mapper>

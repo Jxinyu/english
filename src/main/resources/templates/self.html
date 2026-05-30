@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="/static/assets/img/favicon.ico">
+    <title>english~星球-个人中心</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="/static/assets/css/all.css">
+
+    <!-- Main CSS -->
+    <link href="/static/assets/css/main.css" rel="stylesheet"/>
+
+    <!-- Animation CSS -->
+    <link href="/static/assets/css/vendor/aos.css" rel="stylesheet"/>
+
+    <!--ayui-->
+    <link href="/static/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/static/layui/css/modules/laydate/default/laydate.css" rel="stylesheet"/>
+    <link href="/static/layui/css/modules/layer/default/layer.css" rel="stylesheet"/>
+    <link href="/static/index.css" rel="stylesheet"/>
+    <style>
+        button:focus {
+            outline: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<!----------------------------------------------------------------------
+NAVBAR（如果您不想在滚动时更改导航背景，请删除 topnav）
+------------------------------------------------------------------------>
+<nav class="topnav navbar navbar-expand-lg navbar-dark bg-black fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/index">
+            <i class="layui-icon-export layui-icon"></i>
+            <strong>english-星球</strong>
+        </a>
+        <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02"
+                aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse" id="navbarColor02" style="">
+            <ul class="navbar-nav mr-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="/toIndex">首页</a>
+                </li>
+                <li class="nav-item" shiro:authenticated>
+                    <a class="nav-link" href="/english/self">个人中心</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto d-flex align-items-center">
+                <li class="nav-item">
+                    <span class="nav-link layui-form" id="select_theme" onclick="changeTheme(this)">
+                          <input type="checkbox" lay-skin="switch" lay-filter="switchTest" title="白|夜" >
+                    </span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link">
+                        <a class="btn btn-primary btn-round shadow-sm" href="/index"
+                        ><i
+                                class="layui-icon-username layui-icon"></i>&nbsp;&nbsp;前台
+                        </a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+
+
+<!-------------------------------------
+HEADER
+--------------------------------------->
+<header>
+    <div class="jumbotron jumbotron-lg jumbotron-fluid mb-0 pb-5 bg-black position-relative"
+         style="background-image: url('/static/index/background.png')">
+        <div class="container-fluid text-white h-100">
+        </div>
+    </div>
+    <svg style="-webkit-transform:rotate(-180deg); -moz-transform:rotate(-180deg); -o-transform:rotate(-180deg); transform:rotate(-180deg); margin-top: -1px;"
+         version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+         x="0px" y="0px" viewBox="0 0 1440 126"
+         xml:space="preserve">
+        <path class="bg-black"
+              d="M685.6,38.8C418.7-11.1,170.2,9.9,0,30v96h1440V30C1252.7,52.2,1010,99.4,685.6,38.8z"></path>
+    </svg>
+</header>
+<!--- END HEADER -->
+
+
+<main class="container">
+    <!--------------------------------------
+    CAROUSEL 主体
+    --------------------------------------->
+    <section class="pt-4 pb-5" data-aos="fade-up" id="example-carousel">
+        <h3 class="h5 mb-4 font-weight-bold">个人中心</h3>
+        <small><span style="color: red">*</span>我的信息</small>
+        <div shiro:guest>
+            <div style="height: 160px;background-color: #0fb1ff; text-align: center">
+                <h1 style="color: darkgreen">欢迎使用english~星球</h1>
+            </div>
+        </div>
+        <div class="layui-row layui-bg-gray" shiro:authenticated>
+            <div>
+                <table id="imgTable" lay-filter="imgFilter"></table>
+            </div>
+        </div>
+
+        <small><span style="color: red">*</span>是否要催催他？</small>
+        <div>
+            <button class="layui-btn layui-btn-fluid layui-btn-normal click_reminder">点击催一催</button>
+        </div>
+        <div>
+            <button class="layui-btn layui-btn-fluid layui-btn-danger clearData">清空数据</button>
+        </div>
+
+        <div class="layui-row layui-bg-gray" shiro:authenticated>
+            <div>
+                <table id="all_Record" lay-filter="all_RecordFilter"></table>
+            </div>
+        </div>
+
+    </section>
+
+    <!--------------------------------------
+    END
+    --------------------------------------->
+
+</main>
+
+<!--------------------------------------
+FOOTER
+--------------------------------------->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px"
+     y="0px" viewbox="0 0 1440 126" style="enable-background:new 0 0 1440 126;" xml:space="preserve">
+<path class="bg-black" d="M685.6,38.8C418.7-11.1,170.2,9.9,0,30v96h1440V30C1252.7,52.2,1010,99.4,685.6,38.8z"/>
+</svg>
+<footer class="bg-black pb-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md mr-4">
+                <i class="mb-4 layui-icon layui-icon-home" style="color: white"></i>
+                <small class="d-block mt-3 text-muted">©
+                    <script>document.write(new Date().getFullYear())</script>
+                    作者：Jxinyu
+                </small>
+                <small class="d-block mt-3 text-muted">©
+                    <a href="https://beian.miit.gov.cn/" class="text-muted" target="_blank">
+                        版权所有ICP证：苏ICP备2023002663号
+                    </a>
+                    <a target="_blank" class="text-muted"
+                       href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32032402000503">
+                        苏公网安备 32032402000503号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </a>
+                </small>
+            </div>
+            <div class="col-6 col-md">
+                <h5 class="mb-4 text-white">联系站主</h5>
+                <ul class="list-unstyled text-small">
+                    <li>
+                        <a class="text-muted" href="#">
+                            <i class="layui-icon layui-icon-login-wechat" style="color: white"></i>
+                            微信：18551788910
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">
+                            <i class="layui-icon layui-icon-email" style="color: white"></i>
+                            邮箱：2750317105@qq.com
+                        </a>
+                    </li>
+                    <li>
+                        <a class="text-muted" href="#">
+                            <i class="layui-icon layui-icon-login-qq" style="color: white"></i>
+                            Q&nbsp;Q：2750317105
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!--------------------------------------
+JAVASCRIPTS
+--------------------------------------->
+<script src="/static/assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="/static/assets/js/vendor/share.js" type="text/javascript"></script>
+<script src="/static/assets/js/functions.js" type="text/javascript"></script>
+<script src="/static/layui/layui.js" type="text/javascript"></script>
+<script src="/static/index.js" type="text/javascript"></script>
+
+<!-- Animation -->
+<script src="/static/assets/js/vendor/aos.js" type="text/javascript"></script>
+<noscript>
+    <style>
+        *[data-aos] {
+            display: block !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+    </style>
+</noscript>
+<script>
+    $('.click_reminder').on('click', function (obj) {
+        layer.prompt({title: '输入内容，并确认', formType: 2}, function (content, index) {
+            $.ajax({
+                url: '/english/sendEmail',
+                method: 'get',
+                data: {
+                    content: '<div style="width: 100%; height: 90vh;background-image: linear-gradient(90deg, #FFDEE9 0%, #B5FFFC 100%);' +
+                        '">' +
+                        '    <p style="font-size: 25px;' +
+                        '  font-weight: bold;' +
+                        '  background: linear-gradient(to right, #f12711, #f5af19, #f5af19, #f12711);' +
+                        '  -webkit-background-clip: text;' +
+                        '  -webkit-text-fill-color: transparent;margin: 20px 20px">' + content + '</p>' +
+                        '</div>',
+                    subject: '宝贝来催你打卡啦~~'
+                },
+                success: function (res) {
+                    layer.close(index)
+                    if (res.code === 200) {
+                        layer.msg('发送成功')
+                    } else {
+                        layer.msg('稍后重试')
+                    }
+                }
+            })
+        });
+
+    })
+
+    $('.clearData').on('click', function (obj) {
+        layer.open({
+            title: '选择清空类型'  //标题
+            , content:
+                '    <div>' +
+                '      <select class="clearDataValue" name="val" style="height: 60px; width: 80%;font-size: 25px;' +
+                'text-align: center;color: #1bb144;background-color: #90ffa5;">' +
+                '        <option value="-1" selected>点击选择</option>' +
+                '        <option value="common">普通类型</option>' +
+                '        <option value="red">红宝书必考词</option>' +
+                '        <option value="love">恋恋有词</option>' +
+                '        <option value="love_middle">恋恋有词中频词</option>' +
+                '      </select>' +
+                '    </div>'//提示内容  可以为html
+            , area: '240px'   // 大小
+            , shadeClose: true //开启遮罩关闭
+            , btn: ['确定', '取消']  // 两个按钮内容， 可以多个
+            , yes: function (index) {  //第一个按钮  '确定结束'
+                var mold = $('.clearDataValue').val()
+                if (mold === '-1') {
+                    layer.close(index)
+                    return
+                }
+                $.ajax({
+                    url: '/english/clearClockData/' + mold,
+                    method: 'post',
+                    success: function (res) {
+                        layer.close(index)
+                        if (res.code === 200) {
+                            layer.msg(res.msg)
+                        } else {
+                            layer.msg('清空失败，请刷新重试。' + res.msg + '或联系管理员')
+                        }
+                    }
+                })
+            }
+        });
+    })
+
+    layui.use(['layer', 'table', 'form'], function () {
+        var table = layui.table;
+        queryData("/english/getSelf")
+        queryAllCordData('/english/queryAllCordData')
+        var conn = null;
+
+        // 获取表格数据
+        function queryData(url) {
+            table.render({
+                elem: '#imgTable'
+                , url: url //数据接口
+                , page: true
+                , skin: 'gird'
+                , parseData: function (res) {
+                    conn = res
+                    return {
+                        "code": res.code, // 解析接口状态
+                        "msg": res.msg, // 解析提示文本
+                        "count": res.data.count, // 解析数据长度
+                        "data": res.data // 解析数据列表
+                    };
+                }
+                , response: {
+                    statusCode: 200 //规定成功的状态码
+                }
+                , css: [
+                    // 对开启了编辑的单元格追加样式
+                    '.layui-table-view td[data-edit]{color: #16B777;}'
+                ].join('')
+                , cols: [
+                    [
+                        {field: 'user_name', title: '用户', width: 72}
+                        , {field: 'nowDayNum', title: '今日数量', width: 86}
+                        , {
+                        field: 'nowDayComplete', title: '今完？', width: 72, templet: function (d) {
+                            return '<span style="color: red; font-size: 20px">' + (d.nowDayComplete === 1 ? 'yes' : 'no') + '</span>'
+                        }
+                    }
+                        , {
+                        field: 'eachDayNum', title: '每日计划', edit: 'true', width: 100, templet: function (d) {
+                            return '<span style="color: #0fb1ff">' + d.eachDayNum + '个</span>'
+                        }
+                    }
+                        , {field: 'allNum', title: '总数量', width: 72}
+                        , {field: 'allDay', title: '总天数', width: 72}
+                        , {field: 'allCompleDay', title: '完成总天数', width: 100}
+                        , {field: 'wmoldChoice', title: '单词类型选择', width: 150, templet: '#TPL-select-city'}
+                        , {field: 'o_nowDayNum', title: '宝贝今日单词数', width: 150}
+                        , {
+                        field: 'o_nowDayComplete', title: '宝贝今完？', width: 150, templet: function (d) {
+                            return '<span style="color: red; font-size: 20px">' + (d.o_nowDayComplete === 1 ? 'yes' : 'no') + '</span>'
+                        }
+                    }
+                        , {
+                        field: 'o_eachDayNum', title: '宝贝每日计划', width: 150, templet: function (d) {
+                            return '<span style="color: #0fb1ff">' + d.o_eachDayNum + '</span>'
+                        }
+                    }
+                        , {field: 'o_allNum', title: '宝贝总数量', width: 100}
+                    ]
+                ]
+                , done: function (res, curr, count) {
+
+                    // console.log(conn)
+
+
+                    var options = this;
+                    // 获取当前行数据
+                    table.getRowData = function (elem) {
+                        var index = $(elem).closest('tr').data('index');
+                        return table.cache[options.id][index] || {};
+                    };
+                    defaultChoiceSelectOption()
+
+                    function defaultChoiceSelectOption() {
+                        $(".select-wmoldChoice").find("option[name='true']").attr('selected', 'selected')
+                    }
+
+                    table.on('edit(imgFilter)', function (obj) {
+                        var value = obj.value // 得到修改后的值
+                        var data = obj.data // 得到所在行所有键值
+
+                        // 值的校验
+                        if (value.replace(/\s/g, '') === '') {
+                            layer.tips('值不能为空', this, {tips: 1});
+                            return obj.reedit(); // 重新编辑 -- v2.8.0 新增
+                        }
+                        var reg = /^\d+$/;
+                        if (!(reg.test(value))) {
+                            layer.tips('值不是数字', this, {tips: 1});
+                            return obj.reedit(); // 重新编辑 -- v2.8.0 新增
+                        }
+                        sendData(data)
+                    });
+
+                    // layui form select 事件
+                    $('.select-wmoldChoice').on('change', function () {
+                        var value = this.value; // 获取选中项 value
+                        var data = table.getRowData(this); // 获取当前行数据(如 id 等字段，以作为数据修改的索引)
+                        data.wmoldChoice = value
+                        sendData(data)
+                    });
+
+                    function sendData(data) {
+                        $.ajax({
+                            url: '/english/self/update',
+                            method: 'post',
+                            data: {
+                                ulId: data.ulId,
+                                uId: data.uId,
+                                allDay: data.allDay,
+                                allNum: data.allNum,
+                                allCompleDay: data.allCompleDay,
+                                eachDayNum: data.eachDayNum,
+                                memoMode: data.memoMode,
+                                nowDayComplete: data.nowDayComplete,
+                                nowDayNum: data.nowDayNum,
+                                uConnId: data.uConnId,
+                                wMoldChoice: data.wmoldChoice
+                            },
+                            success: function (res) {
+                                if (res.code === 200) {
+                                    layer.msg('修改成功')
+                                } else {
+                                    layer.msg('修改失败，刷新后重试')
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
+
+        function queryAllCordData(url) {
+            table.render({
+                elem: '#all_Record'
+                , url: url //数据接口
+                , page: true
+                , skin: 'gird'
+                , request: { //请求的参数
+                    pageName: 'page' //页码的参数名称，默认：page
+                    , limitName: 'limit' //每页数据量的参数名，默认：limit
+                }
+                , parseData: function (res) {
+                    return {
+                        "code": res.code, // 解析接口状态
+                        "msg": res.msg, // 解析提示文本
+                        "count": res.count, // 解析数据长度
+                        "data": res.data // 解析数据列表
+                    };
+                }
+                , response: {
+                    statusCode: 200 //规定成功的状态码
+                }
+                , cols: [
+                    [
+                        {field: 'cdate', title: '打卡时间', width: 150}
+                        , {field: 'cwordNum', title: '单词数', width: 72}
+                    ]
+                ]
+            });
+        }
+
+
+    })
+
+
+    AOS.init({
+        duration: 700
+    });
+
+    <!-- 禁用小于 1200px 的动画，如果你喜欢可以更改值 -->
+
+    AOS.init({
+        disable: function () {
+            var maxWidth = 1200;
+            return window.innerWidth < maxWidth;
+        }
+    });
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+<script type="text/html" id="TPL-select-city">
+    <select name="wmoldChoice" class="layui-border-green select-wmoldChoice" lay-ignore>
+        <option value="common" name="{{d.wMoldChoice=='common'? 'true': 'false'}}">普通</option>
+        <option value="red" name="{{d.wMoldChoice=='red'? 'true': 'false'}}">红宝书必考词</option>
+        <option value="love" name="{{d.wMoldChoice=='love'? 'true': 'false'}}">练练有词</option>
+        <option value="love_middle" name="{{d.wMoldChoice=='love_middle'? 'true': 'false'}}">练练有词中频词</option>
+    </select>
+</script>
+</body>
+</html>
